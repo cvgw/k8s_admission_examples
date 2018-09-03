@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: echo-webhook
+spec:
+  selector:
+    app: echo-webhook
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: api-port

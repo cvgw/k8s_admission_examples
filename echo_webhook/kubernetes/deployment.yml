@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-webhook-deployment
+  labels:
+    app: echo-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-webhook
+  template:
+    metadata:
+      labels:
+        app: echo-webhook
+    spec:
+      containers:
+      - name: echo-webhook
+        image: echo-webhook:latest
+        imagePullPolicy: Never
+        env:
+          - name: PORT
+            value: "443"
+        ports:
+        - name: api-port
+          containerPort: 443
+          protocol: TCP

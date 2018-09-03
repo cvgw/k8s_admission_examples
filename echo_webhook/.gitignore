@@ -1,0 +1,5 @@
+*.csr
+*.crt
+*.pem
+echo_webhook
+kubeconfig.yml
