@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-initializer
+  labels:
+    app: vault-initializer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-initializer
+  template:
+    metadata:
+      labels:
+        app: vault-initializer
+    spec:
+      serviceAccountName: test
+      containers:
+      - name: vault-initializer
+        image: vault-initializer:latest
+        imagePullPolicy: Never
+        env:
+        - name: VAULT_ADDRESS
+          value: "https://example.default.svc:8200"
+        - name: VAULT_CLIENT_CERT_PATH
+          value: "/etc/vault-secrets/vault-client-ca.crt"
+        volumeMounts:
+        - name: vault-client-ca
+          mountPath: "/etc/vault-secrets"
+          readOnly: true
+      volumes:
+      - name: vault-client-ca
+        secret:
+          secretName: example-default-vault-client-tls
