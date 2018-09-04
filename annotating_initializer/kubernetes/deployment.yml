@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: annotator
+  labels:
+    app: annotator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: annotator
+  template:
+    metadata:
+      labels:
+        app: annotator
+    spec:
+      serviceAccountName: test
+      containers:
+      - name: annotator
+        image: annotator:latest
+        imagePullPolicy: Never
