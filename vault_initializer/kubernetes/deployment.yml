@@ -24,6 +24,12 @@ spec:
           value: "https://example.default.svc:8200"
         - name: VAULT_CLIENT_CERT_PATH
           value: "/etc/vault-secrets/vault-client-ca.crt"
+        - name: VAULT_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: vault-initializer-config
+              key: token
+
         volumeMounts:
         - name: vault-client-ca
           mountPath: "/etc/vault-secrets"

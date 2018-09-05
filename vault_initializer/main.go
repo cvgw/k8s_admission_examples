@@ -21,7 +21,6 @@ import (
 	vaultApi "github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
 	"fmt"
-	"io/ioutil"
 )
 
 const (
@@ -45,15 +44,20 @@ func getKeyFromVault() (string, string, error) {
 		Address: vaultAddress,
 	}
 
-	_, err := ioutil.ReadFile(vaultClientCertPath)
-	if err != nil {
-		return "", "", err
-	}
+	//_, err := ioutil.ReadFile(vaultClientCertPath)
+	//if err != nil {
+	//	return "", "", err
+	//}
 
 	// TODO make the vault CA cert work
+	//tlsConfig := vaultApi.TLSConfig{
+	//	Insecure: true,
+	//}
+
 	tlsConfig := vaultApi.TLSConfig{
-		Insecure: true,
+		CACert: vaultClientCertPath,
 	}
+
 
 	config.ConfigureTLS(&tlsConfig)
 	client, err := vaultApi.NewClient(&config)
