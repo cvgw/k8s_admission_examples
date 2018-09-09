@@ -1,15 +1,14 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
  name: sleep
- annotations:
-   initializer.cvgw.me/annotating: "true"
 spec:
  replicas: 1
+ selector:
+  matchLabels:
+    app: sleep
  template:
    metadata:
-     annotations:
-       sidecar-injector-webhook.morven.me/inject: "true"
      labels:
        app: sleep
    spec:
