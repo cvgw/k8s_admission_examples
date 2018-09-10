@@ -1,0 +1,8 @@
+*.csr
+*.crt
+*.pem
+kubeconfig.yml
+cfssl
+cfssl-certinfo
+cfssljson
+config_mutator_webhook

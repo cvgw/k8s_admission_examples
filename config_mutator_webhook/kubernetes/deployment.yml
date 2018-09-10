@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-mutator-deployment
+  labels:
+    app: config-mutator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-mutator
+  template:
+    metadata:
+      labels:
+        app: config-mutator
+    spec:
+      containers:
+      - name: config-mutator
+        image: config-mutator:latest
+        imagePullPolicy: Never
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+        env:
+          - name: PORT
+            value: "443"
+          - name: CERT_FILE_PATH
+            value: /etc/config/server.crt
+          - name: SERVER_KEY_FILE_PATH
+            value: /etc/config/server-key.pem
+        ports:
+        - name: api-port
+          containerPort: 443
+          protocol: TCP
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mutator-config

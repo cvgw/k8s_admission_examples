@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: config-mutator
+spec:
+  selector:
+    app: config-mutator
+  ports:
+  - protocol: TCP
+    port: 443
+    targetPort: api-port
