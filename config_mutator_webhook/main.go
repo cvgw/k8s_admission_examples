@@ -108,14 +108,43 @@ func podFromRequest(req *v1beta1.AdmissionRequest) (coreV1.Pod, error) {
 }
 
 func addConfigToPod(pod *coreV1.Pod) ([]byte, v1beta1.PatchType, error) {
-	patchType := v1beta1.PatchTypeJSONPatch
-
 	if pod.Annotations == nil {
 		pod.Annotations = make(map[string]string)
 	}
 
 	updatedPod := pod.DeepCopy()
-	updatedPod.Annotations["test-mutate-annotation"] = "meow"
+
+	containers := updatedPod.Spec.Containers
+	if containers != nil {
+		source := coreV1.EnvFromSource{
+			ConfigMapRef: &coreV1.ConfigMapEnvSource{
+				LocalObjectReference: coreV1.LocalObjectReference{
+					Name: "mutating-demo-configmap",
+				},
+			},
+		}
+
+		updatedContainers := make([]coreV1.Container, 0)
+		for _, container := range containers {
+			envFrom := container.EnvFrom
+			if envFrom == nil {
+				envFrom = make([]coreV1.EnvFromSource, 0)
+			}
+
+			envFrom = append(envFrom, source)
+			container.EnvFrom = envFrom
+
+			updatedContainers = append(updatedContainers, container)
+		}
+
+		updatedPod.Spec.Containers = updatedContainers
+	}
+
+	return createPodPatch(pod, updatedPod)
+}
+
+func createPodPatch(pod, updatedPod *coreV1.Pod) ([]byte, v1beta1.PatchType, error) {
+	patchType := v1beta1.PatchTypeJSONPatch
 
 	oldData, err := json.Marshal(pod)
 	if err != nil {
