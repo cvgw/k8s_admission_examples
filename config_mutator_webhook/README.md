@@ -1,3 +1,4 @@
-# Echo Webhook
+# Config Mutator Webhook
 ## Description
-A simple mutating admission webhook that just logs info about the resource being created
+A simple mutating admission webhook that adds an EnvFrom ConfigMap to all containers
+in a Pod
